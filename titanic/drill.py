@@ -39,8 +39,6 @@ df_train['Age'] = df_train['Age'].apply(lambda x: df_train['Age'].mean() if np.i
 
 df_train.dropna(axis=0, inplace=True)
 
-print df_train.head()
-
 reg = linear_model.LogisticRegression()
 # clf = tree.DecisionTreeClassifier()
 # clf = svm.SVC()
