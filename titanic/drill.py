@@ -5,6 +5,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import linear_model, tree, svm
+import seaborn as sns
+sns.set_style('whitegrid')
 
 def data_clean(df):
     # df.set_index('PassengerId', inplace=True)
@@ -23,9 +25,7 @@ def data_clean(df):
     return df
 
 df_train = pd.read_csv('train.csv')
-
 df_train.set_index('PassengerId', inplace=True)
-
 df_train = df_train[['Survived', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']]
 
 df_train.ix[df_train['Sex'] == 'male', 'Sex'] = 1
@@ -36,8 +36,9 @@ df_train.ix[df_train['Embarked'] == 'C', 'Embarked'] = 1
 df_train.ix[df_train['Embarked'] == 'Q', 'Embarked'] = 2
 
 df_train['Age'] = df_train['Age'].apply(lambda x: df_train['Age'].mean() if np.isnan(x) else x)
-
 df_train.dropna(axis=0, inplace=True)
+
+
 
 reg = linear_model.LogisticRegression()
 # clf = tree.DecisionTreeClassifier()
