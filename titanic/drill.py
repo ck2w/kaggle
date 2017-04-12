@@ -9,14 +9,14 @@ from sklearn import linear_model, tree, svm
 def data_clean(df):
     # df.set_index('PassengerId', inplace=True)
 
-    df['Sex'][df['Sex'] == 'male'] = 1
-    df['Sex'][df['Sex'] == 'female'] = 0
+    df.ix[df['Sex'] == 'male', 'Sex'] = 1
+    df.ix[df['Sex'] == 'female', 'Sex'] = 0
 
-    df['Embarked'][df['Embarked'] == 'S'] = 0
-    df['Embarked'][df['Embarked'] == 'C'] = 1
-    df['Embarked'][df['Embarked'] == 'Q'] = 2
+    df.ix[df['Embarked'] == 'S', 'Embarked'] = 0
+    df.ix[df['Embarked'] == 'C', 'Embarked'] = 1
+    df.ix[df['Embarked'] == 'Q', 'Embarked'] = 2
 
-    df['Age'] = df['Age'].apply(lambda x: 35.67 if np.isnan(x) else x)
+    df['Age'] = df['Age'].apply(lambda x: df['Age'].mean() if np.isnan(x) else x)
 
     df['Fare'] = df['Fare'].apply(lambda x: df['Fare'].mean() if np.isnan(x) else x)
 
@@ -28,24 +28,25 @@ df_train.set_index('PassengerId', inplace=True)
 
 df_train = df_train[['Survived', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Fare', 'Embarked']]
 
-df_train['Sex'][df_train['Sex'] == 'male'] = 1
-df_train['Sex'][df_train['Sex'] == 'female'] = 0
+df_train.ix[df_train['Sex'] == 'male', 'Sex'] = 1
+df_train.ix[df_train['Sex'] == 'female', 'Sex'] = 0
 
-df_train['Embarked'][df_train['Embarked'] == 'S'] = 0
-df_train['Embarked'][df_train['Embarked'] == 'C'] = 1
-df_train['Embarked'][df_train['Embarked'] == 'Q'] = 2
+df_train.ix[df_train['Embarked'] == 'S', 'Embarked'] = 0
+df_train.ix[df_train['Embarked'] == 'C', 'Embarked'] = 1
+df_train.ix[df_train['Embarked'] == 'Q', 'Embarked'] = 2
 
-df_train['Age'] = df_train['Age'].apply(lambda x: 35.67 if np.isnan(x) else x)
+df_train['Age'] = df_train['Age'].apply(lambda x: df_train['Age'].mean() if np.isnan(x) else x)
 
 df_train.dropna(axis=0, inplace=True)
 
+print df_train.head()
 
 reg = linear_model.LogisticRegression()
 # clf = tree.DecisionTreeClassifier()
-clf = svm.SVC()
+# clf = svm.SVC()
 
 reg.fit(df_train[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']], df_train['Survived'])
-clf.fit(df_train[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']], df_train['Survived'])
+# clf.fit(df_train[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']], df_train['Survived'])
 
 # test data
 
