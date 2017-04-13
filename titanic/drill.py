@@ -4,7 +4,8 @@ __author__ = 'ken.chen'
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn import linear_model, tree, svm
+from sklearn import linear_model, tree, svm, ensemble
+
 import seaborn as sns
 sns.set_style('whitegrid')
 
@@ -38,22 +39,23 @@ df_train.ix[df_train['Embarked'] == 'Q', 'Embarked'] = 2
 df_train['Age'] = df_train['Age'].apply(lambda x: df_train['Age'].mean() if np.isnan(x) else x)
 df_train.dropna(axis=0, inplace=True)
 
-
-
 reg = linear_model.LogisticRegression()
-# clf = tree.DecisionTreeClassifier()
-# clf = svm.SVC()
+# clf_dt = tree.DecisionTreeClassifier()
+# clf_svm = svm.SVC()
+clf_rf = ensemble.RandomForestClassifier()
 
-reg.fit(df_train[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']], df_train['Survived'])
-# clf.fit(df_train[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']], df_train['Survived'])
+# reg.fit(df_train[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']], df_train['Survived'])
+clf_rf.fit(df_train[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']], df_train['Survived'])
+print clf_rf.score(df_train[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']], df_train['Survived'])
 
 # test data
 
 df_test = pd.read_csv('test.csv')
 df_test = data_clean(df_test)
 
-df_test['Survived'] = reg.predict(df_test[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']])
+# df_test['Survived'] = reg.predict(df_test[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']])
 # df_test['Survived'] = clf.predict(df_test[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']])
+df_test['Survived'] = clf_rf.predict(df_test[['Sex', 'Age', 'Fare', 'Embarked', 'Parch', 'SibSp', 'Pclass']])
 
 df_test = df_test[['PassengerId', 'Survived']]
 
